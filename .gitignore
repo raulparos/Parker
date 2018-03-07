@@ -2,6 +2,15 @@
 # Project Ignores                       #
 #---------------------------------------#
 
+# IntelliJ Idea
+.idea/
+*.iml
+*.xsd
+*.classpath
+*.DS_Store
+.idea
+gensrc/
+
 # Maven
 target/
 pom.xml.tag
@@ -36,12 +45,3 @@ hs_err_pid*
 *.log
 log/
 logs/
-
-# IntelliJ Idea
-.idea/
-*.iml
-*.xsd
-*.classpath
-*.DS_Store
-.idea
-gensrc/
