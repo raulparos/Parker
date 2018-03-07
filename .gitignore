@@ -37,6 +37,11 @@ hs_err_pid*
 log/
 logs/
 
-# JetBrains IDEs
+# IntelliJ Idea
 .idea/
 *.iml
+*.xsd
+*.classpath
+*.DS_Store
+.idea
+gensrc/
