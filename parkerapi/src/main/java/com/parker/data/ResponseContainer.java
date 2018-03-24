@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class ResponseContainer implements Serializable {
     private boolean successful;
     private Object data;
+    private Object errors;
 
     public ResponseContainer() {
         successful = true;
@@ -24,5 +25,13 @@ public class ResponseContainer implements Serializable {
 
     public void setData(Object data) {
         this.data = data;
+    }
+
+    public Object getErrors() {
+        return errors;
+    }
+
+    public void setErrors(Object errors) {
+        this.errors = errors;
     }
 }
