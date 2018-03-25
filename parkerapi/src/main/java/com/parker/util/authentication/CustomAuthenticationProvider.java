@@ -1,5 +1,9 @@
 package com.parker.util.authentication;
 
+import com.parker.domain.exception.user.UserException;
+import com.parker.domain.model.User;
+import com.parker.service.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,29 +17,31 @@ import java.util.List;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
+
+    @Autowired
+    private UserService userService;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String userName = authentication.getName();
+        String email = authentication.getName();
         String password = authentication.getCredentials().toString();
-        System.out.println("Username " + userName);
-        if (authorizedUser(userName, password)) {
+        if (authorizedUser(email, password)) {
             List<GrantedAuthority> grantedAuths = new ArrayList<>();
-            grantedAuths.add(() -> {
-                return "ROLE_USER";
-            });
-            Authentication auth = new UsernamePasswordAuthenticationToken(userName, password, grantedAuths);
-            System.out.println(auth.getAuthorities());
+            grantedAuths.add(() -> "ROLE_USER");
+            Authentication auth = new UsernamePasswordAuthenticationToken(email, password, grantedAuths);
             return auth;
-        } else {
-            throw new AuthenticationCredentialsNotFoundException("Invalid Credentials!");
         }
+
+        throw new AuthenticationCredentialsNotFoundException("Invalid credentials for authentication!");
     }
 
-    private boolean authorizedUser(String userName, String password) {
-        System.out.println("username is :" + userName + " and password is " + password);
-        if ("a".equals(userName) && "a".equals(password))
+    private boolean authorizedUser(String email, String password) {
+        try {
+            userService.authenticateUser(email, password);
             return true;
-        return false;
+        } catch (UserException e) {
+            return false;
+        }
     }
 
     @Override
