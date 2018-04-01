@@ -15,6 +15,6 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException
     {
-        System.out.println("authentication successful!");
+
     }
 }

@@ -14,9 +14,15 @@ public class ParkingSpotDaoImpl implements ParkingSpotDao {
     private SessionFactory sessionFactory;
 
     @Override
-    public ParkingSpot save(ParkingSpot parkingSpot) {
+    public Long save(ParkingSpot parkingSpot) {
         Session session = sessionFactory.getCurrentSession();
-        Long id = (Long) session.save(parkingSpot);
-        return parkingSpot;
+        return (Long) session.save(parkingSpot);
+    }
+
+    @Override
+    public ParkingSpot find(Long id) {
+        Session session = sessionFactory.getCurrentSession();
+        return (ParkingSpot) session.createQuery("FROM ParkingSpot p WHERE p.id=:id").
+                setLong("id", id).uniqueResult();
     }
 }

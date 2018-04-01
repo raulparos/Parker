@@ -18,8 +18,8 @@ public class UserDaoImpl implements UserDao {
         Session session = sessionFactory.getCurrentSession();
         User user = (User) session.
                 createQuery("FROM User u WHERE u.email=:email AND u.password=:password").
-                setParameter("email", email).
-                setParameter("password", password).
+                setString("email", email).
+                setString("password", password).
                 uniqueResult();
 
         return user;

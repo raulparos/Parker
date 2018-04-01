@@ -15,7 +15,7 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
     private ParkingSpotDao parkingSpotDao;
 
     @Override
-    public ParkingSpot addParkingSpot(ParkingSpot parkingSpot) {
+    public Long addParkingSpot(ParkingSpot parkingSpot) {
         return parkingSpotDao.save(parkingSpot);
     }
 }
