@@ -1,6 +1,6 @@
-package com.parker.converter.populator.impl;
+package com.parker.domain.populator.impl;
 
-import com.parker.converter.populator.Populator;
+import com.parker.domain.populator.Populator;
 import com.parker.data.ParkingSpotData;
 import com.parker.domain.model.ParkingSpot;
 import org.springframework.stereotype.Component;

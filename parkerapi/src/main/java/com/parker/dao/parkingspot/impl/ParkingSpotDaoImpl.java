@@ -7,6 +7,8 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class ParkingSpotDaoImpl implements ParkingSpotDao {
 
@@ -24,5 +26,18 @@ public class ParkingSpotDaoImpl implements ParkingSpotDao {
         Session session = sessionFactory.getCurrentSession();
         return (ParkingSpot) session.createQuery("FROM ParkingSpot p WHERE p.id=:id").
                 setLong("id", id).uniqueResult();
+    }
+
+    @Override
+    public List<ParkingSpot> find(List<Long> ids) {
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("FROM ParkingSpot p WHERE p.id IN (:ids)").
+                setParameterList("ids", ids).list();
+    }
+
+    @Override
+    public List<ParkingSpot> findAll() {
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("FROM ParkingSpot").list();
     }
 }

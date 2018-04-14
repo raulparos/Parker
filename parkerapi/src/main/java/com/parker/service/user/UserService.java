@@ -7,6 +7,8 @@ import java.util.Locale;
 
 public interface UserService {
     Locale getCurrentLocale();
+
     User getCurrentUser() throws UserException;
+
     User authenticateUser(String email, String password) throws UserException;
 }
