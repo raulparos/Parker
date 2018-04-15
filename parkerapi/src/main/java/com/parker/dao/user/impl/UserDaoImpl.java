@@ -14,12 +14,29 @@ public class UserDaoImpl implements UserDao {
     private SessionFactory sessionFactory;
 
     @Override
+    public void update(User user) {
+        Session session = sessionFactory.getCurrentSession();
+        session.update(user);
+    }
+
+    @Override
     public User find(String email, String password) {
         Session session = sessionFactory.getCurrentSession();
         User user = (User) session.
                 createQuery("FROM User u WHERE u.email=:email AND u.password=:password").
-                setString("email", email).
-                setString("password", password).
+                setParameter("email", email).
+                setParameter("password", password).
+                uniqueResult();
+
+        return user;
+    }
+
+    @Override
+    public User find(String email) {
+        Session session = sessionFactory.getCurrentSession();
+        User user = (User) session.
+                createQuery("FROM User u WHERE u.email=:email").
+                setParameter("email", email).
                 uniqueResult();
 
         return user;

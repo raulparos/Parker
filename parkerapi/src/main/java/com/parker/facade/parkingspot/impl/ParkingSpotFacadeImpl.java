@@ -3,6 +3,7 @@ package com.parker.facade.parkingspot.impl;
 import com.parker.data.ParkingSpotData;
 import com.parker.domain.exception.user.UserException;
 import com.parker.domain.model.ParkingSpot;
+import com.parker.domain.model.User;
 import com.parker.domain.populator.Populator;
 import com.parker.facade.parkingspot.ParkingSpotFacade;
 import com.parker.service.parkingspot.ParkingSpotService;
@@ -31,15 +32,15 @@ public class ParkingSpotFacadeImpl implements ParkingSpotFacade {
     @Override
     public ParkingSpotData addParkingSpot(ParkingSpotData parkingSpotData) {
         try {
-            userService.getCurrentUser();
+            User currentUser = userService.getCurrentUser();
+            ParkingSpot parkingSpotFromData = new ParkingSpot();
+            parkingSpotPopulator.populate(parkingSpotData, parkingSpotFromData);
+            Long id = parkingSpotService.save(parkingSpotFromData, currentUser);
+            parkingSpotData.setId(id);
         } catch (UserException e) {
-            e.printStackTrace();
+            //todo: Log error
+            parkingSpotData = null;
         }
-        ParkingSpot parkingSpotFromData = new ParkingSpot();
-        parkingSpotPopulator.populate(parkingSpotData, parkingSpotFromData);
-
-        Long id = parkingSpotService.addParkingSpot(parkingSpotFromData);
-        parkingSpotData.setId(id);
 
         return parkingSpotData;
     }

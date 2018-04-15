@@ -7,6 +7,8 @@ import java.util.List;
 public interface ParkingSpotDao {
     Long save(ParkingSpot parkingSpot);
 
+    void update(ParkingSpot parkingSpot);
+
     ParkingSpot find(Long id);
 
     List<ParkingSpot> find(List<Long> ids);

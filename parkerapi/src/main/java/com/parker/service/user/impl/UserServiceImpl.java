@@ -3,15 +3,18 @@ package com.parker.service.user.impl;
 import com.parker.dao.user.UserDao;
 import com.parker.domain.exception.user.UserException;
 import com.parker.domain.exception.user.UserNotFoundException;
+import com.parker.domain.model.ParkingSpot;
 import com.parker.domain.model.User;
 import com.parker.service.user.UserService;
 import com.parker.util.authentication.UserUtils;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Locale;
 
 @Service
@@ -22,6 +25,11 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
+    public void update(User user) {
+        userDao.update(user);
+    }
+
+    @Override
     public Locale getCurrentLocale() {
         //todo: Implement this correctly when localization comes into play. This is just a mock-up
         return Locale.ENGLISH;
@@ -30,8 +38,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        authentication.getCredentials();
-        return null;
+        return userDao.find((String) authentication.getPrincipal());
     }
 
     @Override
@@ -44,4 +51,14 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Override
+    public void addParkingSpot(ParkingSpot parkingSpot) {
+        User currentUser = getCurrentUser();
+        if (currentUser != null) {
+            List<ParkingSpot> parkingSpots = currentUser.getParkingSpots();
+            parkingSpots.add(parkingSpot);
+            currentUser.setParkingSpots(parkingSpots);
+            userDao.update(currentUser);
+        }
+    }
 }

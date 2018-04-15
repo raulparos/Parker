@@ -3,6 +3,7 @@ package com.parker.domain.model;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "parkingSpot")
 public class ParkingSpot {
     @Id
     @GeneratedValue
@@ -13,6 +14,12 @@ public class ParkingSpot {
 
     @Column(nullable = false)
     private Float longitude;
+
+    @Column(nullable = false)
+    private String address;
+
+    @Column(nullable = false)
+    private String activeDaysIntervals;
 
     @ManyToOne
     private User user;
@@ -47,5 +54,21 @@ public class ParkingSpot {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getActiveDaysIntervals() {
+        return activeDaysIntervals;
+    }
+
+    public void setActiveDaysIntervals(String activeDaysIntervals) {
+        this.activeDaysIntervals = activeDaysIntervals;
     }
 }

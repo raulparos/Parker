@@ -6,4 +6,8 @@ public final class ParkingSpotConstants {
     }
 
     public static final String PARKING_SPOT_IDS_DELIMITER = ",";
+    public static final String PARKING_SPOT_ACTIVE_DAYS_INTERVALS_OUTER_DELIMITER_START = "{";
+    public static final String PARKING_SPOT_ACTIVE_DAYS_INTERVALS_OUTER_DELIMITER_END = "}";
+    public static final String PARKING_SPOT_ACTIVE_DAYS_INTERVALS_DAY_DELIMITER = "|";
+    public static final String PARKING_SPOT_ACTIVE_DAYS_INTERVALS_INTERVAL_DELIMITER = "-";
 }

@@ -22,6 +22,12 @@ public class ParkingSpotDaoImpl implements ParkingSpotDao {
     }
 
     @Override
+    public void update(ParkingSpot parkingSpot) {
+        Session session = sessionFactory.getCurrentSession();
+        session.update(parkingSpot);
+    }
+
+    @Override
     public ParkingSpot find(Long id) {
         Session session = sessionFactory.getCurrentSession();
         return (ParkingSpot) session.createQuery("FROM ParkingSpot p WHERE p.id=:id").

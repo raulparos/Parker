@@ -1,15 +1,23 @@
 package com.parker.service.parkingspot;
 
+import com.parker.data.ParkingSpotActiveIntervalData;
 import com.parker.domain.model.ParkingSpot;
+import com.parker.domain.model.User;
 
 import java.util.List;
 
 public interface ParkingSpotService {
-    Long addParkingSpot(ParkingSpot parkingSpot);
+    Long save(ParkingSpot parkingSpot, User user);
+
+    void update(ParkingSpot parkingSpot);
 
     ParkingSpot find(Long id);
 
     List<ParkingSpot> find(String ids);
 
     List<ParkingSpot> find(List<Long> ids);
+
+    String formatActiveDaysIntervals(List<ParkingSpotActiveIntervalData> activeDaysIntervals);
+
+    List<ParkingSpotActiveIntervalData> formatActiveDaysIntervals(String activeDaysIntervals);
 }

@@ -1,9 +1,12 @@
 package com.parker.domain.model;
 
+import com.parker.util.authentication.UserRole;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "User")
 public class User {
     @Id
     @GeneratedValue
@@ -21,11 +24,22 @@ public class User {
     @Column(nullable = false)
     private String lastName;
 
-    @Column
+    @Column(length = 25)
     private String licensePlate;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @Column(nullable = false)
+    private UserRole userRole;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<ParkingSpot> parkingSpots;
+
+    public UserRole getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
 
     public Long getId() {
         return id;

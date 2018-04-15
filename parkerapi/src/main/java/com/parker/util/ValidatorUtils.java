@@ -25,7 +25,7 @@ public final class ValidatorUtils {
         for (ObjectError error : bindingResult.getAllErrors()) {
             String errorString;
             try {
-                errorString = messageSource.getMessage(error.getCode(), null, userService.getCurrentLocale());
+                errorString = messageSource.getMessage(error.getCode(), error.getArguments(), userService.getCurrentLocale());
             }
             catch (NoSuchMessageException e) {
                 //todo: Log the error
