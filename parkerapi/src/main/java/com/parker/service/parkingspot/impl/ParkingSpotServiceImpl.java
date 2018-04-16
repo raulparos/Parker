@@ -10,8 +10,11 @@ import com.parker.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +32,8 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
     @Override
     public Long save(ParkingSpot parkingSpot, User user) {
         parkingSpot.setUser(user);
-        userService.addParkingSpot(parkingSpot);
-        userService.update(user);
+        userService.addParkingSpotToCurrentUser(parkingSpot);
         return parkingSpotDao.save(parkingSpot);
-    }
-
-    @Override
-    public void update(ParkingSpot parkingSpot) {
-        parkingSpotDao.update(parkingSpot);
     }
 
     @Override
@@ -46,12 +43,12 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
 
     @Override
     public List<ParkingSpot> find(String ids) {
-        String[] idsSplit = StringUtils.split(ids, ParkingSpotConstants.PARKING_SPOT_IDS_DELIMITER);
+        String[] idsSplit = ids.split(ParkingSpotConstants.PARKING_SPOT_IDS_DELIMITER);
 
         List<Long> idsList = new ArrayList<>();
         for (int index = 0; index < idsSplit.length; index++) {
             try {
-                Long id = Long.parseLong(idsSplit[0]);
+                Long id = Long.parseLong(idsSplit[index]);
                 idsList.add(id);
             }
             catch (NumberFormatException e) {
@@ -68,15 +65,23 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
 
     @Override
     public List<ParkingSpot> find(List<Long> ids) {
-        return parkingSpotDao.find(ids);
+        List<ParkingSpot> parkingSpots = parkingSpotDao.find(ids);
+        if (parkingSpots.size() > ids.size()) {
+            //todo: Log db error with data inconsistency
+        }
+        return parkingSpots;
     }
 
     @Override
     public String formatActiveDaysIntervals(List<ParkingSpotActiveIntervalData> activeDaysIntervals) {
-        StringBuilder builder = new StringBuilder();
+        if (CollectionUtils.isEmpty(activeDaysIntervals)) {
+            return "";
+        }
+
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        List<String> intervals = new ArrayList<>();
         for (ParkingSpotActiveIntervalData activeDaysInterval : activeDaysIntervals) {
-            builder.append(ParkingSpotConstants.PARKING_SPOT_ACTIVE_DAYS_INTERVALS_OUTER_DELIMITER_START);
+            StringBuilder builder = new StringBuilder();
             if (activeDaysInterval.getDayOfWeek() != null) {
                 builder.append(activeDaysInterval.getDayOfWeek().name());
                 builder.append(ParkingSpotConstants.PARKING_SPOT_ACTIVE_DAYS_INTERVALS_DAY_DELIMITER);
@@ -88,14 +93,48 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
             if (activeDaysInterval.getEndTime() != null) {
                 builder.append(activeDaysInterval.getEndTime().format(dateTimeFormatter));
             }
-            builder.append(ParkingSpotConstants.PARKING_SPOT_ACTIVE_DAYS_INTERVALS_OUTER_DELIMITER_END);
+
+            intervals.add(builder.toString());
         }
 
-        return builder.toString();
+        return StringUtils.arrayToCommaDelimitedString(intervals.toArray());
     }
 
     @Override
     public List<ParkingSpotActiveIntervalData> formatActiveDaysIntervals(String activeDaysIntervals) {
-        return null;
+        if (StringUtils.isEmpty(activeDaysIntervals)) {
+            return null;
+        }
+
+        List<ParkingSpotActiveIntervalData> activeDaysIntervalsList = new ArrayList<>();
+        String[] array = activeDaysIntervals.split(ParkingSpotConstants.PARKING_SPOT_IDS_DELIMITER);
+        for (int index = 0; index < array.length; index++) {
+            ParkingSpotActiveIntervalData activeIntervalData = new ParkingSpotActiveIntervalData();
+
+            String[] split = array[index].split("\\" + ParkingSpotConstants.PARKING_SPOT_ACTIVE_DAYS_INTERVALS_DAY_DELIMITER);
+            if (split.length == 2) {
+                try {
+                    DayOfWeek dayOfWeek = DayOfWeek.valueOf(split[0]);
+
+                    String[] interval = split[1].split(ParkingSpotConstants.PARKING_SPOT_ACTIVE_DAYS_INTERVALS_INTERVAL_DELIMITER);
+                    if (interval.length == 2) {
+                        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+                        LocalTime startTime = LocalTime.parse(interval[0], dateTimeFormatter);
+                        LocalTime endTime = LocalTime.parse(interval[1], dateTimeFormatter);
+
+                        activeIntervalData.setDayOfWeek(dayOfWeek);
+                        activeIntervalData.setStartTime(startTime);
+                        activeIntervalData.setEndTime(endTime);
+
+                        activeDaysIntervalsList.add(activeIntervalData);
+                    }
+                }
+                catch (IllegalArgumentException e) {
+                    //todo: Log error
+                }
+            }
+        }
+
+        return activeDaysIntervalsList;
     }
 }

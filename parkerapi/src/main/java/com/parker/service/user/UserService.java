@@ -7,13 +7,11 @@ import com.parker.domain.model.User;
 import java.util.Locale;
 
 public interface UserService {
-    void update(User user);
-
     Locale getCurrentLocale();
 
     User getCurrentUser() throws UserException;
 
     User authenticateUser(String email, String password) throws UserException;
 
-    void addParkingSpot(ParkingSpot parkingSpot);
+    void addParkingSpotToCurrentUser(ParkingSpot parkingSpot);
 }

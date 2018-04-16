@@ -9,8 +9,6 @@ import java.util.List;
 public interface ParkingSpotService {
     Long save(ParkingSpot parkingSpot, User user);
 
-    void update(ParkingSpot parkingSpot);
-
     ParkingSpot find(Long id);
 
     List<ParkingSpot> find(String ids);

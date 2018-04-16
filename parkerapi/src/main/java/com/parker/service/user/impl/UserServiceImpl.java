@@ -25,11 +25,6 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public void update(User user) {
-        userDao.update(user);
-    }
-
-    @Override
     public Locale getCurrentLocale() {
         //todo: Implement this correctly when localization comes into play. This is just a mock-up
         return Locale.ENGLISH;
@@ -52,13 +47,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addParkingSpot(ParkingSpot parkingSpot) {
+    public void addParkingSpotToCurrentUser(ParkingSpot parkingSpot) {
         User currentUser = getCurrentUser();
         if (currentUser != null) {
             List<ParkingSpot> parkingSpots = currentUser.getParkingSpots();
             parkingSpots.add(parkingSpot);
             currentUser.setParkingSpots(parkingSpots);
-            userDao.update(currentUser);
         }
     }
 }

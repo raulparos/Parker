@@ -9,7 +9,10 @@ import com.parker.domain.validator.impl.ParkingSpotValidator;
 import com.parker.facade.parkingspot.ParkingSpotFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.EscapedErrors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,19 +46,20 @@ public class ParkingSpotController extends AbstractController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/get", method = RequestMethod.GET, consumes = "application/json", produces = "application/json")
-    public ResponseContainer getParkingSpots(@RequestParam String parkingSpotIds, BindingResult bindingResult) {
+    @RequestMapping(value = "/get", method = RequestMethod.GET, produces = "application/json")
+    public ResponseContainer getParkingSpots(@RequestParam("parkingSpotIds") String parkingSpotIds) {
         ResponseContainer responseContainer = new ResponseContainer();
 
-        if (!validate(parkingSpotIdsValidator, parkingSpotIds, bindingResult, responseContainer)) {
+        BindException bindException = new BindException(parkingSpotIds, "parkingSpotIds");
+        if (!validate(parkingSpotIdsValidator, parkingSpotIds, bindException, responseContainer)) {
             return responseContainer;
         }
 
         List<ParkingSpotData> parkingSpots = parkingSpotFacade.getParkingSpots(parkingSpotIds);
-        if (parkingSpots.size() == 1) {
+        String[] idsSplit = parkingSpotIds.split(ParkingSpotConstants.PARKING_SPOT_IDS_DELIMITER);
+        if (idsSplit.length == 1) {
             //If the request param contained only one parking spot id, the response should contain only the parking spot
-            String[] idsSplit = StringUtils.split(parkingSpotIds, ParkingSpotConstants.PARKING_SPOT_IDS_DELIMITER);
-            if (idsSplit.length == 1) {
+            if (parkingSpots.size() == 1) {
                 responseContainer.setData(parkingSpots.get(0));
             }
         }

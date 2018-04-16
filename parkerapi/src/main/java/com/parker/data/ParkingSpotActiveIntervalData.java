@@ -12,7 +12,6 @@ public class ParkingSpotActiveIntervalData implements Serializable {
     private LocalTime startTime;
     @JsonFormat(pattern = "hh:mm")
     private LocalTime endTime;
-    private Long parkingSpotId;
 
     public DayOfWeek getDayOfWeek() {
         return dayOfWeek;
@@ -36,13 +35,5 @@ public class ParkingSpotActiveIntervalData implements Serializable {
 
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
-    }
-
-    public Long getParkingSpotId() {
-        return parkingSpotId;
-    }
-
-    public void setParkingSpotId(Long parkingSpotId) {
-        this.parkingSpotId = parkingSpotId;
     }
 }
