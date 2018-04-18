@@ -18,4 +18,6 @@ public interface ParkingSpotService {
     String formatActiveDaysIntervals(List<ParkingSpotActiveIntervalData> activeDaysIntervals);
 
     List<ParkingSpotActiveIntervalData> formatActiveDaysIntervals(String activeDaysIntervals);
+
+    List<ParkingSpot> findParkingSpotsInRadius(Float latitude, Float longitude, Integer radius);
 }

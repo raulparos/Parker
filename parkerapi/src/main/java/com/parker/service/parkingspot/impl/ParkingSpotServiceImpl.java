@@ -7,6 +7,7 @@ import com.parker.domain.model.ParkingSpot;
 import com.parker.domain.model.User;
 import com.parker.service.parkingspot.ParkingSpotService;
 import com.parker.service.user.UserService;
+import com.parker.util.GeolocationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -136,5 +137,21 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
         }
 
         return activeDaysIntervalsList;
+    }
+
+    @Override
+    public List<ParkingSpot> findParkingSpotsInRadius(Float latitude, Float longitude, Integer radius) {
+        //todo: Improve this
+        List<ParkingSpot> parkingSpots = parkingSpotDao.findAll();
+
+        List<ParkingSpot> parkingSpotsInRadius = new ArrayList<>();
+        for (ParkingSpot parkingSpot : parkingSpots) {
+            double distance = GeolocationUtils.distance(latitude, parkingSpot.getLatitude(), longitude, parkingSpot.getLongitude(), 0.0, 0.0);
+            if (distance <= radius) {
+                parkingSpotsInRadius.add(parkingSpot);
+            }
+        }
+
+        return parkingSpotsInRadius;
     }
 }

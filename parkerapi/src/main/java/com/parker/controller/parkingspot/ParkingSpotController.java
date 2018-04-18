@@ -8,11 +8,8 @@ import com.parker.domain.validator.impl.ParkingSpotIdsValidator;
 import com.parker.domain.validator.impl.ParkingSpotValidator;
 import com.parker.facade.parkingspot.ParkingSpotFacade;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.EscapedErrors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -62,10 +59,21 @@ public class ParkingSpotController extends AbstractController {
             if (parkingSpots.size() == 1) {
                 responseContainer.setData(parkingSpots.get(0));
             }
-        }
-        else {
+        } else {
             responseContainer.setData(parkingSpots);
         }
+
+        return responseContainer;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/get-in-radius", method = RequestMethod.GET, produces = "application/json")
+    public ResponseContainer getParkingSpotsInRange(@RequestParam("latitude") Float latitude, @RequestParam("longitude") Float longitude,
+                                                    @RequestParam(value = "radius", defaultValue = "500") Integer radius) {
+        ResponseContainer responseContainer = new ResponseContainer();
+        List<ParkingSpotData> parkingSpotsInRadius = parkingSpotFacade.findParkingSpotsInRadius(latitude, longitude, radius);
+
+        responseContainer.setData(parkingSpotsInRadius);
 
         return responseContainer;
     }

@@ -8,4 +8,6 @@ public interface ParkingSpotFacade {
     ParkingSpotData addParkingSpot(ParkingSpotData parkingSpotData);
 
     List<ParkingSpotData> getParkingSpots(String parkingSpotIds);
+
+    List<ParkingSpotData> findParkingSpotsInRadius(Float latitude, Float longitude, Integer radius);
 }

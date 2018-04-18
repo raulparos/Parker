@@ -59,4 +59,19 @@ public class ParkingSpotFacadeImpl implements ParkingSpotFacade {
 
         return parkingSpotsData;
     }
+
+    @Override
+    public List<ParkingSpotData> findParkingSpotsInRadius(Float latitude, Float longitude, Integer radius) {
+        List<ParkingSpot> parkingSpots = parkingSpotService.findParkingSpotsInRadius(latitude, longitude, radius);
+
+        List<ParkingSpotData> parkingSpotsData = new ArrayList<>();
+        for (ParkingSpot parkingSpot : parkingSpots) {
+            ParkingSpotData parkingSpotData = new ParkingSpotData();
+            parkingSpotDataPopulator.populate(parkingSpot, parkingSpotData);
+
+            parkingSpotsData.add(parkingSpotData);
+        }
+
+        return parkingSpotsData;
+    }
 }
