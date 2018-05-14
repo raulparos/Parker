@@ -6,6 +6,7 @@ export default class Header extends Component {
     constructor(props) {
         super(props);
     }
+
     render() {
         return (
             <View style={styles.container}>
@@ -31,7 +32,7 @@ export default class Header extends Component {
                     name="my-location"
                     size={28}
                     style={{color: '#04BEA6'}}
-                    onPress={() => this.props.navigation.toggleDrawer()}
+                    onPress={() => this.props.getUserLocation()}
                 />
             </View>
 
