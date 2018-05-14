@@ -69,7 +69,7 @@ public class ParkingSpotController extends AbstractController {
     @ResponseBody
     @RequestMapping(value = "/get-in-radius", method = RequestMethod.GET, produces = "application/json")
     public ResponseContainer getParkingSpotsInRange(@RequestParam("latitude") Float latitude, @RequestParam("longitude") Float longitude,
-                                                    @RequestParam(value = "radius", defaultValue = "500") Integer radius) {
+                                                    @RequestParam(value = "radius", defaultValue = "1500") Integer radius) {
         ResponseContainer responseContainer = new ResponseContainer();
         List<ParkingSpotData> parkingSpotsInRadius = parkingSpotFacade.findParkingSpotsInRadius(latitude, longitude, radius);
 

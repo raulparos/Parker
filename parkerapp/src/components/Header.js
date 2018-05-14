@@ -24,11 +24,11 @@ export default class Header extends Component {
                     <Text
                         style={styles.parkingSpotsNo}
                     >
-                        ( 256 spots near you )
+                        ( {this.props.parkingSpotsNo} spots near you )
                     </Text>
                 </View>
                 <MaterialIcon
-                    name="location-searching"
+                    name="my-location"
                     size={28}
                     style={{color: '#04BEA6'}}
                     onPress={() => this.props.navigation.toggleDrawer()}

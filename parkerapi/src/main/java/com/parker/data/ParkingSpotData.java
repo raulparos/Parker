@@ -4,8 +4,8 @@ import java.util.List;
 
 public class ParkingSpotData {
     private Long id;
-    private Float latitude;
-    private Float longitude;
+    private Double latitude;
+    private Double longitude;
     private String address;
     private Long userId;
     private List<ParkingSpotActiveIntervalData> activeDaysIntervals;
@@ -18,19 +18,19 @@ public class ParkingSpotData {
         this.id = id;
     }
 
-    public Float getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Float latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public Float getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Float longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
