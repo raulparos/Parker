@@ -24,7 +24,8 @@
                                 access="permitAll" />
 
         <security:intercept-url pattern="/**"
-                           access="hasAuthority('ROLE_USER')" />
+                           access="permitAll" />
+                           <!--access="hasAuthority('ROLE_USER')" />-->
 
         <security:logout logout-url="/user/logout" delete-cookies="JSESSIONID" />
 
