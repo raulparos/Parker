@@ -5,8 +5,23 @@ import {Location, MapView, Permissions} from 'expo';
 
 import Header from '../components/Header';
 import displayMessage from '../util/DisplayMessage';
+import geoCodeLatLng from '../util/Geocoder';
 
 export default class MainAppScreen extends Component {
+    static navigationOptions = {
+        drawerLabel: 'Parker map',
+        drawerIcon: () => {
+            return (
+                <MaterialIcon
+                    name="menu"
+                    size={30}
+                    style={{color: '#04BEA6'}}
+                >
+                </MaterialIcon>
+            );
+        }
+    };
+
     constructor(props) {
         super(props);
         this.state = {
@@ -17,9 +32,11 @@ export default class MainAppScreen extends Component {
                 longitudeDelta: 0.00300,
             },
             parkingSpotsNo: 0,
-            parkingSpots: []
+            parkingSpots: [],
+            newParkingSpot: [],
+            geoCodedAddress: "Geocode service could not determine address",
         };
-        this.getParkingSpotsInRadius(46.770439, 23.591423);
+        this.getParkingSpotsInRadiusCall(46.770439, 23.591423);
     }
 
     componentDidMount() {
@@ -32,12 +49,14 @@ export default class MainAppScreen extends Component {
             console.log("LOCATION ERROR!");
         }
 
+        console.log("Getting user location async...");
         return await Location.getCurrentPositionAsync({});
     };
 
     getUserLocation = () => {
         this.getLocationAsync()
             .then((location) => {
+                console.log("Got user location async...");
                 this.setState({ mapRegion: { latitude: location.coords.latitude, longitude: location.coords.longitude,
                         latitudeDelta: 0.00700, longitudeDelta: 0.00300, } });
                 this.mapView.animateToRegion(this.state.mapRegion, 10);
@@ -47,8 +66,7 @@ export default class MainAppScreen extends Component {
             });
     };
 
-
-    getParkingSpotsInRadius = (latitude, longitude) => {
+    getParkingSpotsInRadiusCall = (latitude, longitude) => {
         fetch('http://192.168.100.6:8080/parking-spot/get-in-radius?latitude=' + latitude + '&longitude=' + longitude, {
             method: 'GET',
             headers: {
@@ -66,20 +84,49 @@ export default class MainAppScreen extends Component {
 
     onMapRegionChange = (region) => {
         this.setState({ mapRegion: region });
-        // console.log(region);
-        this.getParkingSpotsInRadius(region.latitude, region.longitude);
+        if (this.state.newParkingSpot.length === 1) {
+            this.setState({ newParkingSpot: [{ latitude: region.latitude, longitude: region.longitude }] });
+            console.log("Parking spot latitude: ", this.state.newParkingSpot[0].latitude);
+            geoCodeLatLng(this.state.newParkingSpot[0].latitude, this.state.newParkingSpot[0].longitude, this.geoCodeLatLngCallback);
+        }
+        this.getParkingSpotsInRadiusCall(region.latitude, region.longitude);
     };
 
-    static navigationOptions = {
-        drawerLabel: 'Parker map',
-        drawerIcon: () => {
+    geoCodeLatLngCallback = (address) => {
+        this.setState({ geoCodedAddress: address });
+    };
+
+    addNewParkingSpotMarker = () => {
+        this.setState({ newParkingSpot: [{ latitude: this.state.mapRegion.latitude, longitude: this.state.mapRegion.longitude }] });
+        geoCodeLatLng(this.state.mapRegion.latitude, this.state.mapRegion.latitude, this.geoCodeLatLngCallback);
+    };
+
+    renderAddParkingSpotComponent = () => {
+        if (this.state.newParkingSpot.length === 0) {
             return (
-                <MaterialIcon
-                    name="menu"
-                    size={30}
-                    style={{color: '#04BEA6'}}
-                >
-                </MaterialIcon>
+                <View style={styles.addParkingSpotContainer}>
+                    <MaterialIcon
+                        name="add-location"
+                        size={40}
+                        style={styles.addParkingSpotButton}
+                        onPress={() => this.addNewParkingSpotMarker()}
+                    />
+                </View>
+            );
+        }
+        else if (this.state.newParkingSpot.length === 1){
+            return (
+                <View style={styles.setParkingSpotLocationContainer}>
+                    <Text style={styles.setParkingSpotLocationNextText}>
+                        NEXT
+                        <MaterialIcon
+                            name="navigate-next"
+                            size={40}
+                            onPress={() => this.addNewParkingSpotMarker()}
+                            style={styles.setParkingSpotLocationNext}
+                        />
+                    </Text>
+                </View>
             );
         }
     };
@@ -100,20 +147,20 @@ export default class MainAppScreen extends Component {
                         <MapView.Marker
                             key={parkingSpot.id}
                             coordinate={{latitude: parkingSpot.latitude, longitude: parkingSpot.longitude}}
-                            title={'Parking spot'}
-                            description={parkingSpot.address}
                             image={require('../assets/parking_spot_marker2.png')}
                         />
                     ))}
+                    {this.state.newParkingSpot.map(newParkingSpot => (
+                        <MapView.Marker
+                            draggable={true}
+                            key={1}
+                            title={"Your parking spot"}
+                            description={this.state.geoCodedAddress}
+                            coordinate={{ latitude: newParkingSpot.latitude, longitude: newParkingSpot.longitude }}
+                        />
+                    ))}
                 </MapView>
-                <View style={styles.addParkingSpotContainer}>
-                    <MaterialIcon
-                        name="add-location"
-                        size={40}
-                        style={styles.addParkingSpotButton}
-                        onPress={() => this.props.navigation.toggleDrawer()}
-                    />
-                </View>
+                <View>{this.renderAddParkingSpotComponent()}</View>
             </View>
         );
     }
@@ -140,16 +187,35 @@ const styles = StyleSheet.create({
         bottom: 0,
     },
     addParkingSpotButton: {
-        color: '#04BEA6',
+        color: '#ffffff',
     },
     addParkingSpotContainer: {
-        backgroundColor: '#ffffff',
+        backgroundColor: '#04BEA6',
         position: 'absolute',
         bottom: 20,
         right: 20,
         padding: 5,
         borderRadius: 30,
         borderWidth: 1,
-        borderColor: '#04BEA6'
-    }
+        borderColor: '#03a38e',
+    },
+    setParkingSpotLocationContainer: {
+        backgroundColor: '#04BEA6',
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        padding: 5,
+        borderRadius: 30,
+        borderWidth: 1,
+        borderColor: '#03a38e',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    setParkingSpotLocationNext: {
+        color: '#ffffff',
+    },
+    setParkingSpotLocationNextText: {
+        color: '#ffffff',
+    },
 });
