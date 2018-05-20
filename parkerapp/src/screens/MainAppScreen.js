@@ -2,10 +2,19 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {Location, MapView, Permissions} from 'expo';
+import { createStackNavigator } from 'react-navigation';
 
 import Header from '../components/Header';
 import displayMessage from '../util/DisplayMessage';
 import geoCodeLatLng from '../util/Geocoder';
+import getServerUrl from '../util/ServerUrl';
+import AddParkingSpotScreen from "../screens/AddParkingSpotScreen";
+
+const AddParkingSpot = createStackNavigator(
+    {
+        AddParkingSpot: { screen: AddParkingSpotScreen },
+    }
+);
 
 export default class MainAppScreen extends Component {
     static navigationOptions = {
@@ -13,7 +22,7 @@ export default class MainAppScreen extends Component {
         drawerIcon: () => {
             return (
                 <MaterialIcon
-                    name="menu"
+                    name="map"
                     size={30}
                     style={{color: '#04BEA6'}}
                 >
@@ -67,7 +76,7 @@ export default class MainAppScreen extends Component {
     };
 
     getParkingSpotsInRadiusCall = (latitude, longitude) => {
-        fetch('http://192.168.100.6:8080/parking-spot/get-in-radius?latitude=' + latitude + '&longitude=' + longitude, {
+        fetch(getServerUrl() + '/parking-spot/get-in-radius?latitude=' + latitude + '&longitude=' + longitude, {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -87,7 +96,7 @@ export default class MainAppScreen extends Component {
         if (this.state.newParkingSpot.length === 1) {
             this.setState({ newParkingSpot: [{ latitude: region.latitude, longitude: region.longitude }] });
             console.log("Parking spot latitude: ", this.state.newParkingSpot[0].latitude);
-            geoCodeLatLng(this.state.newParkingSpot[0].latitude, this.state.newParkingSpot[0].longitude, this.geoCodeLatLngCallback);
+            geoCodeLatLng(region.latitude, region.longitude, this.geoCodeLatLngCallback);
         }
         this.getParkingSpotsInRadiusCall(region.latitude, region.longitude);
     };
@@ -98,7 +107,12 @@ export default class MainAppScreen extends Component {
 
     addNewParkingSpotMarker = () => {
         this.setState({ newParkingSpot: [{ latitude: this.state.mapRegion.latitude, longitude: this.state.mapRegion.longitude }] });
-        geoCodeLatLng(this.state.mapRegion.latitude, this.state.mapRegion.latitude, this.geoCodeLatLngCallback);
+        geoCodeLatLng(this.state.mapRegion.latitude, this.state.mapRegion.longitude, this.geoCodeLatLngCallback);
+    };
+
+    cancelAddNewParkingSpot = () => {
+        this.setState({ newParkingSpot: [] });
+        this.setState({ geoCodedAddress: null });
     };
 
     renderAddParkingSpotComponent = () => {
@@ -116,25 +130,41 @@ export default class MainAppScreen extends Component {
         }
         else if (this.state.newParkingSpot.length === 1){
             return (
-                <View style={styles.setParkingSpotLocationContainer}>
-                    <Text style={styles.setParkingSpotLocationNextText}>
-                        NEXT
+                <View style={styles.addNewParkingSpotLocationWrapper}>
+                    <View style={styles.cancelParkingSpotLocationCancelContainer}>
+                        <MaterialIcon
+                            name="close"
+                            size={36}
+                            onPress={() => this.cancelAddNewParkingSpot()}
+                            style={styles.cancelParkingSpotLocationCancel}
+                        />
+                    </View>
+                    <View style={styles.setParkingSpotLocationContainer}>
                         <MaterialIcon
                             name="navigate-next"
                             size={40}
-                            onPress={() => this.addNewParkingSpotMarker()}
+                            onPress={() => this.showAddParkingSpotScreen()}
                             style={styles.setParkingSpotLocationNext}
                         />
-                    </Text>
+                    </View>
                 </View>
             );
         }
     };
 
+    showAddParkingSpotScreen = () => {
+        console.log("Showing add parking spot screen");
+        this.props.navigation.navigate('AddNewParkingSpot', { newParkingSpot: this.state.newParkingSpot[0], address: this.state.geoCodedAddress, addParkingSpotCallback: this.addParkingSpotCallback });
+    };
+
+    addParkingSpotCallback = () => {
+        console.log("Callback came back from add parking spot");
+        this.cancelAddNewParkingSpot();
+    };
+
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.space} />
                 <Header navigation={this.props.navigation} parkingSpotsNo={this.state.parkingSpotsNo} getUserLocation={this.getUserLocation}/>
                 <MapView
                     style={{ flex: 1 }}
@@ -157,6 +187,7 @@ export default class MainAppScreen extends Component {
                             title={"Your parking spot"}
                             description={this.state.geoCodedAddress}
                             coordinate={{ latitude: newParkingSpot.latitude, longitude: newParkingSpot.longitude }}
+                            image={require('../assets/parking_spot_marker.png')}
                         />
                     ))}
                 </MapView>
@@ -174,10 +205,6 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 30,
         color: 'green'
-    },
-    space: {
-        backgroundColor: '#04BEA6',
-        height: 24
     },
     map: {
         position: 'absolute',
@@ -199,23 +226,43 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#03a38e',
     },
+    addNewParkingSpotLocationWrapper: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
+        left: 10,
+        zIndex: 9999,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
     setParkingSpotLocationContainer: {
         backgroundColor: '#04BEA6',
-        position: 'absolute',
-        bottom: 20,
-        right: 20,
-        padding: 5,
         borderRadius: 30,
         borderWidth: 1,
         borderColor: '#03a38e',
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginBottom: 10,
+        marginLeft: 60,
     },
     setParkingSpotLocationNext: {
         color: '#ffffff',
+        padding: 5
     },
-    setParkingSpotLocationNextText: {
+    cancelParkingSpotLocationCancelContainer: {
+        backgroundColor: '#f44336',
+        borderRadius: 30,
+        borderWidth: 1,
+        borderColor: '#d81c0f',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 10,
+        marginRight: 60,
+    },
+    cancelParkingSpotLocationCancel: {
         color: '#ffffff',
-    },
+        padding: 5
+    }
 });
