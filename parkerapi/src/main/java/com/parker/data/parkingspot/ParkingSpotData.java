@@ -1,8 +1,9 @@
-package com.parker.data;
+package com.parker.data.parkingspot;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ParkingSpotData {
+public class ParkingSpotData implements Serializable {
     private Long id;
     private Double latitude;
     private Double longitude;

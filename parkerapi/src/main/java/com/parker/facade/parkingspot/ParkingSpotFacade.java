@@ -1,6 +1,6 @@
 package com.parker.facade.parkingspot;
 
-import com.parker.data.ParkingSpotData;
+import com.parker.data.parkingspot.ParkingSpotData;
 
 import java.util.List;
 

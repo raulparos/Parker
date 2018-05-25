@@ -1,4 +1,4 @@
-package com.parker.data;
+package com.parker.data.parkingspot;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -8,8 +8,10 @@ import java.time.LocalTime;
 
 public class ParkingSpotActiveIntervalData implements Serializable {
     private DayOfWeek dayOfWeek;
+
     @JsonFormat(pattern = "hh:mm")
     private LocalTime startTime;
+
     @JsonFormat(pattern = "hh:mm")
     private LocalTime endTime;
 

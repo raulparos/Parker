@@ -1,12 +1,13 @@
 package com.parker.controller.user;
 
+import com.parker.controller.AbstractController;
 import com.parker.data.ResponseContainer;
-import com.parker.data.UserLoginData;
+import com.parker.data.user.UserLoginData;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/user")
-public class UserController {
+public class UserController extends AbstractController {
 
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")

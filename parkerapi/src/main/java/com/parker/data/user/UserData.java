@@ -1,4 +1,4 @@
-package com.parker.data;
+package com.parker.data.user;
 
 import java.io.Serializable;
 

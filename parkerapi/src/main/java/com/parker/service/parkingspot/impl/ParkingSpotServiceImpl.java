@@ -2,10 +2,13 @@ package com.parker.service.parkingspot.impl;
 
 import com.parker.constants.ParkingSpotConstants;
 import com.parker.dao.parkingspot.ParkingSpotDao;
-import com.parker.data.ParkingSpotActiveIntervalData;
+import com.parker.data.parkingspot.ParkingSpotActiveIntervalData;
+import com.parker.data.parkingspot.ParkingSpotFreeIntervalData;
 import com.parker.domain.model.ParkingSpot;
+import com.parker.domain.model.Reservation;
 import com.parker.domain.model.User;
 import com.parker.service.parkingspot.ParkingSpotService;
+import com.parker.service.reservation.ReservationService;
 import com.parker.service.user.UserService;
 import com.parker.util.GeolocationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,8 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -30,11 +35,19 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ReservationService reservationService;
+
     @Override
     public Long save(ParkingSpot parkingSpot, User user) {
         parkingSpot.setUser(user);
         userService.addParkingSpotToCurrentUser(parkingSpot);
         return parkingSpotDao.save(parkingSpot);
+    }
+
+    @Override
+    public void update(ParkingSpot parkingSpot) {
+        parkingSpotDao.update(parkingSpot);
     }
 
     @Override
@@ -71,6 +84,15 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
             //todo: Log db error with data inconsistency
         }
         return parkingSpots;
+    }
+
+    @Override
+    public void addReservation(ParkingSpot parkingSpot, Reservation reservation) {
+        ParkingSpot current = find(parkingSpot.getId());
+        ArrayList<Reservation> reservations = new ArrayList<>(current.getReservations());
+        reservations.add(reservation);
+        current.setReservations(reservations);
+        update(current);
     }
 
     @Override
@@ -153,5 +175,65 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
         }
 
         return parkingSpotsInRadius;
+    }
+
+    @Override
+    public List<ParkingSpotFreeIntervalData> getFreeIntervalsForParkingSpotId(Long parkingSpotId, Date date) {
+        ParkingSpot parkingSpot = find(parkingSpotId);
+
+        List<ParkingSpotFreeIntervalData> freeIntervals = new ArrayList<>();
+        if (parkingSpot != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            DayOfWeek day = DayOfWeek.of(calendar.get(Calendar.DAY_OF_WEEK));
+
+            List<ParkingSpotActiveIntervalData> activeIntervals = formatActiveDaysIntervals(parkingSpot.getActiveDaysIntervals());
+            List<Reservation> reservations = reservationService.getReservationsForDate(parkingSpot.getReservations(), date);
+
+            ParkingSpotActiveIntervalData interval = getActiveIntervalForDay(activeIntervals, day);
+            if (interval != null) {
+                return getFreeIntervalsFromActiveInterval(interval, reservations);
+            }
+        }
+
+        return freeIntervals;
+    }
+
+    private ParkingSpotActiveIntervalData getActiveIntervalForDay(List<ParkingSpotActiveIntervalData> activeIntervals, DayOfWeek day) {
+        for (ParkingSpotActiveIntervalData activeInterval : activeIntervals) {
+            if (activeInterval.getDayOfWeek().equals(day)) {
+                return activeInterval;
+            }
+        }
+
+        return null;
+    }
+
+    private List<ParkingSpotFreeIntervalData> getFreeIntervalsFromActiveInterval(ParkingSpotActiveIntervalData interval,
+                                                                                 List<Reservation> reservations) {
+        List<ParkingSpotFreeIntervalData> freeIntervals = new ArrayList<>();
+        if (CollectionUtils.isEmpty(reservations)) {
+            ParkingSpotFreeIntervalData freeInterval = new ParkingSpotFreeIntervalData(interval.getStartTime(), interval.getEndTime());
+            freeIntervals.add(freeInterval);
+        }
+        else {
+            LocalTime currentStart = interval.getStartTime();
+            reservations = reservationService.sortReservationsByStartTime(reservations);
+
+            for (Reservation reservation : reservations) {
+                if (reservation.getStartTime().compareTo(currentStart) > 0) {
+                    freeIntervals.add(new ParkingSpotFreeIntervalData(currentStart, reservation.getStartTime()));
+                }
+                else {
+                    currentStart = reservation.getEndTime();
+                }
+            }
+
+            if (currentStart.compareTo(interval.getEndTime()) < 0) {
+                freeIntervals.add(new ParkingSpotFreeIntervalData(currentStart, interval.getEndTime()));
+            }
+        }
+        
+        return freeIntervals;
     }
 }

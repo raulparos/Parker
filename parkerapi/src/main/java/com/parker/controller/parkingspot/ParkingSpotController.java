@@ -2,8 +2,8 @@ package com.parker.controller.parkingspot;
 
 import com.parker.constants.ParkingSpotConstants;
 import com.parker.controller.AbstractController;
-import com.parker.data.FilterData;
-import com.parker.data.ParkingSpotData;
+import com.parker.data.parkingspot.FilterData;
+import com.parker.data.parkingspot.ParkingSpotData;
 import com.parker.data.ResponseContainer;
 import com.parker.domain.validator.impl.ParkingSpotIdsValidator;
 import com.parker.domain.validator.impl.ParkingSpotValidator;
@@ -75,15 +75,6 @@ public class ParkingSpotController extends AbstractController {
         List<ParkingSpotData> parkingSpotsInRadius = parkingSpotFacade.findParkingSpotsInRadius(latitude, longitude, radius);
 
         responseContainer.setData(parkingSpotsInRadius);
-
-        return responseContainer;
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/get-in-radius", method = RequestMethod.POST, produces = "application/json")
-    public ResponseContainer getParkingSpotsInRange(@RequestBody FilterData filterData) {
-        ResponseContainer responseContainer = new ResponseContainer();
-
 
         return responseContainer;
     }

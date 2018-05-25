@@ -1,6 +1,6 @@
 package com.parker.facade.parkingspot.impl;
 
-import com.parker.data.ParkingSpotData;
+import com.parker.data.parkingspot.ParkingSpotData;
 import com.parker.domain.exception.user.UserException;
 import com.parker.domain.model.ParkingSpot;
 import com.parker.domain.model.User;

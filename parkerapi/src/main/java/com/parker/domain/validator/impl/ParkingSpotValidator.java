@@ -1,7 +1,7 @@
 package com.parker.domain.validator.impl;
 
-import com.parker.data.ParkingSpotActiveIntervalData;
-import com.parker.data.ParkingSpotData;
+import com.parker.data.parkingspot.ParkingSpotActiveIntervalData;
+import com.parker.data.parkingspot.ParkingSpotData;
 import com.parker.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,7 +10,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import java.time.DayOfWeek;
 import java.time.format.TextStyle;
 import java.util.List;
 
@@ -31,16 +30,16 @@ public class ParkingSpotValidator implements Validator {
         ValidationUtils.rejectIfEmpty(errors, "longitude", "error.parkingSpot.longitude.empty");
 
         if (parkingSpotData.getLatitude() < -90 || parkingSpotData.getLongitude() > 90) {
-            errors.reject("error.parkingSpot.latitude.outOfBounds");
+            errors.rejectValue("latitude", "error.parkingSpot.latitude.outOfBounds");
         }
 
         if (parkingSpotData.getLongitude() < -180 || parkingSpotData.getLongitude() > 180) {
-            errors.reject("error.parkingSpot.longitude.outOfBounds");
+            errors.rejectValue("longitude", "error.parkingSpot.longitude.outOfBounds");
         }
 
         List<ParkingSpotActiveIntervalData> activeDaysIntervals = parkingSpotData.getActiveDaysIntervals();
         if (CollectionUtils.isEmpty(activeDaysIntervals)) {
-            errors.reject("error.parkingSpot.activeDaysIntervals.empty");
+            errors.rejectValue("activeDaysIntervals", "error.parkingSpot.activeDaysIntervals.empty");
         }
         else {
             for (ParkingSpotActiveIntervalData activeDaysInterval : activeDaysIntervals) {

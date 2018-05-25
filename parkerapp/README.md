@@ -6,7 +6,7 @@ Below you'll find information about performing common tasks. The most recent ver
 
 * [Updating to New Releases](#updating-to-new-releases)
 * [Available Scripts](#available-scripts)
-  * [npm start](#npm-start)
+  * [npm startTime](#npm-startTime)
   * [npm test](#npm-test)
   * [npm run ios](#npm-run-ios)
   * [npm run android](#npm-run-android)
@@ -39,18 +39,18 @@ Upgrading to a new version of React Native requires updating the `react-native`,
 
 If Yarn was installed when the project was initialized, then dependencies will have been installed via Yarn, and you should probably use it to run these commands as well. Unlike dependency installation, command running syntax is identical for Yarn and NPM at the time of this writing.
 
-### `npm start`
+### `npm startTime`
 
 Runs your app in development mode.
 
 Open it in the [Expo app](https://expo.io) on your phone to view it. It will reload if you save edits to your files, and you will see build errors and logs in the terminal.
 
-Sometimes you may need to reset or clear the React Native packager's cache. To do so, you can pass the `--reset-cache` flag to the start script:
+Sometimes you may need to reset or clear the React Native packager's cache. To do so, you can pass the `--reset-cache` flag to the startTime script:
 
 ```
-npm start --reset-cache
+npm startTime --reset-cache
 # or
-yarn start --reset-cache
+yarn startTime --reset-cache
 ```
 
 #### `npm test`
@@ -59,11 +59,11 @@ Runs the [jest](https://github.com/facebook/jest) test runner on your tests.
 
 #### `npm run ios`
 
-Like `npm start`, but also attempts to open your app in the iOS Simulator if you're on a Mac and have it installed.
+Like `npm startTime`, but also attempts to open your app in the iOS Simulator if you're on a Mac and have it installed.
 
 #### `npm run android`
 
-Like `npm start`, but also attempts to open your app on a connected Android device or emulator. Requires an installation of Android build tools (see [React Native docs](https://facebook.github.io/react-native/docs/getting-started.html) for detailed setup). We also recommend installing Genymotion as your Android emulator. Once you've finished setting up the native build environment, there are two options for making the right copy of `adb` available to Create React Native App:
+Like `npm startTime`, but also attempts to open your app on a connected Android device or emulator. Requires an installation of Android build tools (see [React Native docs](https://facebook.github.io/react-native/docs/getting-started.html) for detailed setup). We also recommend installing Genymotion as your Android emulator. Once you've finished setting up the native build environment, there are two options for making the right copy of `adb` available to Create React Native App:
 
 ##### Using Android Studio's `adb`
 
@@ -78,7 +78,7 @@ Like `npm start`, but also attempts to open your app on a connected Android devi
 
 #### `npm run eject`
 
-This will start the process of "ejecting" from Create React Native App's build scripts. You'll be asked a couple of questions about how you'd like to build your project.
+This will startTime the process of "ejecting" from Create React Native App's build scripts. You'll be asked a couple of questions about how you'd like to build your project.
 
 **Warning:** Running eject is a permanent action (aside from whatever version control system you use). An ejected app will require you to have an [Xcode and/or Android Studio environment](https://facebook.github.io/react-native/docs/getting-started.html) set up.
 
@@ -106,20 +106,20 @@ When starting your project, you'll see something like this for your project URL:
 exp://192.168.0.2:19000
 ```
 
-The "manifest" at that URL tells the Expo app how to retrieve and load your app's JavaScript bundle, so even if you load it in the app via a URL like `exp://localhost:19000`, the Expo client app will still try to retrieve your app at the IP address that the start script provides.
+The "manifest" at that URL tells the Expo app how to retrieve and load your app's JavaScript bundle, so even if you load it in the app via a URL like `exp://localhost:19000`, the Expo client app will still try to retrieve your app at the IP address that the startTime script provides.
 
 In some cases, this is less than ideal. This might be the case if you need to run your project inside of a virtual machine and you have to access the packager via a different IP address than the one which prints by default. In order to override the IP address or hostname that is detected by Create React Native App, you can specify your own hostname via the `REACT_NATIVE_PACKAGER_HOSTNAME` environment variable:
 
 Mac and Linux:
 
 ```
-REACT_NATIVE_PACKAGER_HOSTNAME='my-custom-ip-address-or-hostname' npm start
+REACT_NATIVE_PACKAGER_HOSTNAME='my-custom-ip-address-or-hostname' npm startTime
 ```
 
 Windows:
 ```
 set REACT_NATIVE_PACKAGER_HOSTNAME='my-custom-ip-address-or-hostname'
-npm start
+npm startTime
 ```
 
 The above example would cause the development server to listen on `exp://my-custom-ip-address-or-hostname:19000`.

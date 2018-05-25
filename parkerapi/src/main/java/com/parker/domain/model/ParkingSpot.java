@@ -1,6 +1,7 @@
 package com.parker.domain.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "parkingSpot")
@@ -23,6 +24,9 @@ public class ParkingSpot {
 
     @ManyToOne
     private User user;
+
+    @OneToMany
+    private List<Reservation> reservations;
 
     public Long getId() {
         return id;
@@ -70,5 +74,13 @@ public class ParkingSpot {
 
     public void setActiveDaysIntervals(String activeDaysIntervals) {
         this.activeDaysIntervals = activeDaysIntervals;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 }

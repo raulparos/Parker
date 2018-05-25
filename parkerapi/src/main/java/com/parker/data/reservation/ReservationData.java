@@ -1,29 +1,19 @@
-package com.parker.domain.model;
+package com.parker.data.reservation;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalTime;
 import java.util.Date;
 
-@Entity
-@Table(name = "reservation")
-public class Reservation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class ReservationData {
     private Long id;
-
-    @ManyToOne()
-    private User user;
-
-    @ManyToOne()
-    private ParkingSpot parkingSpot;
-
-    @Column(nullable = false)
+    private Long parkingSpotId;
     private Date date;
 
-    @Column(nullable = false)
+    @JsonFormat(pattern = "hh:mm")
     private LocalTime startTime;
 
-    @Column(nullable = false)
+    @JsonFormat(pattern = "hh:mm")
     private LocalTime endTime;
 
     public Long getId() {
@@ -34,20 +24,12 @@ public class Reservation {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public Long getParkingSpotId() {
+        return parkingSpotId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public ParkingSpot getParkingSpot() {
-        return parkingSpot;
-    }
-
-    public void setParkingSpot(ParkingSpot parkingSpot) {
-        this.parkingSpot = parkingSpot;
+    public void setParkingSpotId(Long parkingSpotId) {
+        this.parkingSpotId = parkingSpotId;
     }
 
     public Date getDate() {
