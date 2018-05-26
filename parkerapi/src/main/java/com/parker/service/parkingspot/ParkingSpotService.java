@@ -1,5 +1,6 @@
 package com.parker.service.parkingspot;
 
+import com.parker.data.parkingspot.FilterData;
 import com.parker.data.parkingspot.ParkingSpotActiveIntervalData;
 import com.parker.data.parkingspot.ParkingSpotFreeIntervalData;
 import com.parker.domain.model.ParkingSpot;
@@ -29,4 +30,6 @@ public interface ParkingSpotService {
     List<ParkingSpot> findParkingSpotsInRadius(Float latitude, Float longitude, Integer radius);
 
     List<ParkingSpotFreeIntervalData> getFreeIntervalsForParkingSpotId(Long parkingSpotId, Date date);
+
+    List<ParkingSpot> findFilteredParkingSpotsInRadius(FilterData filterData);
 }

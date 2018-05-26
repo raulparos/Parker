@@ -1,6 +1,8 @@
 package com.parker.facade.parkingspot.impl;
 
+import com.parker.data.parkingspot.FilterData;
 import com.parker.data.parkingspot.ParkingSpotData;
+import com.parker.data.parkingspot.ParkingSpotFreeIntervalData;
 import com.parker.domain.exception.user.UserException;
 import com.parker.domain.model.ParkingSpot;
 import com.parker.domain.model.User;
@@ -11,7 +13,10 @@ import com.parker.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -64,6 +69,25 @@ public class ParkingSpotFacadeImpl implements ParkingSpotFacade {
     public List<ParkingSpotData> findParkingSpotsInRadius(Float latitude, Float longitude, Integer radius) {
         List<ParkingSpot> parkingSpots = parkingSpotService.findParkingSpotsInRadius(latitude, longitude, radius);
 
+        return convertAllParkingSpots(parkingSpots);
+    }
+
+    @Override
+    public List<ParkingSpotData> findFilteredParkingSpotsInRadius(FilterData filterData) {
+        List<ParkingSpot> parkingSpots = parkingSpotService.findFilteredParkingSpotsInRadius(filterData);
+
+        return convertAllParkingSpots(parkingSpots);
+    }
+
+    @Override
+    public List<ParkingSpotFreeIntervalData> getFreeIntervals(String parkingSpotId, String dateString) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyyy-mm-dd");
+        Date date = format.parse(dateString);
+
+        return parkingSpotService.getFreeIntervalsForParkingSpotId(Long.parseLong(parkingSpotId), date);
+    }
+
+    private List<ParkingSpotData> convertAllParkingSpots(List<ParkingSpot> parkingSpots) {
         List<ParkingSpotData> parkingSpotsData = new ArrayList<>();
         for (ParkingSpot parkingSpot : parkingSpots) {
             ParkingSpotData parkingSpotData = new ParkingSpotData();

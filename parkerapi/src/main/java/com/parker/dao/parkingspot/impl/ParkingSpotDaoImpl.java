@@ -31,7 +31,7 @@ public class ParkingSpotDaoImpl implements ParkingSpotDao {
     public ParkingSpot find(Long id) {
         Session session = sessionFactory.getCurrentSession();
         return (ParkingSpot) session.createQuery("FROM ParkingSpot p WHERE p.id=:id").
-                setLong("id", id).uniqueResult();
+                setParameter("id", id).uniqueResult();
     }
 
     @Override

@@ -2,12 +2,9 @@ package com.parker.service.reservation.impl;
 
 import com.parker.dao.reservation.ReservationDao;
 import com.parker.data.parkingspot.ParkingSpotFreeIntervalData;
-import com.parker.data.reservation.ReservationData;
-import com.parker.domain.exception.parkingspot.InvalidIntervalException;
 import com.parker.domain.exception.reservation.ReservationException;
 import com.parker.domain.model.ParkingSpot;
 import com.parker.domain.model.Reservation;
-import com.parker.domain.model.User;
 import com.parker.service.parkingspot.ParkingSpotService;
 import com.parker.service.reservation.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +28,21 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Long save(Reservation reservation) throws ReservationException {
-        if (validateReservationInterval(reservation)) {
+        if (validateReservationInterval(reservation, reservation.getParkingSpot())) {
             parkingSpotService.addReservation(reservation.getParkingSpot(), reservation);
 
             return reservationDao.save(reservation);
         }
         else {
             throw new ReservationException("Reservation interval does not fit in parking spot schedule");
+        }
+    }
+
+    @Override
+    public void delete(Long reservationId) {
+        Reservation reservation = reservationDao.find(reservationId);
+        if (reservation != null) {
+            reservationDao.delete(reservation);
         }
     }
 
@@ -80,8 +85,9 @@ public class ReservationServiceImpl implements ReservationService {
         return sortedList;
     }
 
-    private boolean validateReservationInterval(Reservation reservation) {
-        List<ParkingSpotFreeIntervalData> freeIntervals = parkingSpotService.getFreeIntervalsForParkingSpotId(reservation.getParkingSpot().getId(),
+    @Override
+    public boolean validateReservationInterval(Reservation reservation, ParkingSpot parkingSpot) {
+        List<ParkingSpotFreeIntervalData> freeIntervals = parkingSpotService.getFreeIntervalsForParkingSpotId(parkingSpot.getId(),
                 reservation.getDate());
 
         for (ParkingSpotFreeIntervalData freeInterval : freeIntervals) {

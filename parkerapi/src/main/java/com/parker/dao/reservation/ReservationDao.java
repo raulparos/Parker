@@ -4,4 +4,8 @@ import com.parker.domain.model.Reservation;
 
 public interface ReservationDao {
     Long save(Reservation reservation);
+
+    Reservation find(Long id);
+
+    void delete(Reservation reservation);
 }

@@ -5,4 +5,6 @@ import com.parker.domain.exception.reservation.ReservationException;
 
 public interface ReservationFacade {
     ReservationData addReservation(ReservationData reservationData) throws ReservationException;
+
+    void deleteReservation(String reservationId);
 }

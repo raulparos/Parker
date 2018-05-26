@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/reservation")
@@ -37,8 +38,20 @@ public class ReservationController extends AbstractController {
         } catch (ReservationException e) {
             //todo: Log error
             responseContainer.setSuccessful(false);
-            responseContainer.setErrors(new ArrayList<>().add(e.getMessage()));
+            List<String> errors = new ArrayList<>();
+            errors.add(e.getMessage());
+            responseContainer.setErrors(errors);
         }
+
+        return responseContainer;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/{reservationId}/delete", method = RequestMethod.DELETE, produces = "application/json")
+    public ResponseContainer deleteReservation(@PathVariable("reservationId") String reservationId) {
+        ResponseContainer responseContainer = new ResponseContainer();
+
+        reservationFacade.deleteReservation(reservationId);
 
         return responseContainer;
     }

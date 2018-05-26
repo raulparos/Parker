@@ -18,4 +18,17 @@ public class ReservationDaoImpl implements ReservationDao {
         Session session = sessionFactory.getCurrentSession();
         return (Long) session.save(reservation);
     }
+
+    @Override
+    public Reservation find(Long id) {
+        Session session = sessionFactory.getCurrentSession();
+        return (Reservation) session.createQuery("FROM Reservation r WHERE r.id=:id").
+                setParameter("id", id).uniqueResult();
+    }
+
+    @Override
+    public void delete(Reservation reservation) {
+        Session session = sessionFactory.getCurrentSession();
+        session.delete(reservation);
+    }
 }

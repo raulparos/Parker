@@ -23,7 +23,7 @@ public class ReservationValidator implements Validator {
     public void validate(Object target, Errors errors) {
         ReservationData reservationData = (ReservationData) target;
 
-        ValidationUtils.rejectIfEmpty(errors, "day", "error.reservation.day.empty");
+        ValidationUtils.rejectIfEmpty(errors, "date", "error.reservation.day.empty");
         ValidationUtils.rejectIfEmpty(errors, "startTime", "error.reservation.startTime.empty");
         ValidationUtils.rejectIfEmpty(errors, "endTime", "error.reservation.endTime.empty");
 
@@ -33,7 +33,7 @@ public class ReservationValidator implements Validator {
         Date maxDate = cal.getTime();
         if (reservationData.getDate().compareTo(maxDate) > 0) {
             String[] args = {RESERVATION_NUMBER_OF_DAYS_IN_ADVANCE.toString()};
-            errors.rejectValue("day", "error.reservation.day.outOfBounds", args, "");
+            errors.rejectValue("date", "error.reservation.day.outOfBounds", args, "");
         }
 
         if (reservationData.getStartTime().isAfter(reservationData.getEndTime())) {

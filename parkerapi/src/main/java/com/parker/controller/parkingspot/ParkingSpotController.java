@@ -2,9 +2,10 @@ package com.parker.controller.parkingspot;
 
 import com.parker.constants.ParkingSpotConstants;
 import com.parker.controller.AbstractController;
+import com.parker.data.ResponseContainer;
 import com.parker.data.parkingspot.FilterData;
 import com.parker.data.parkingspot.ParkingSpotData;
-import com.parker.data.ResponseContainer;
+import com.parker.data.parkingspot.ParkingSpotFreeIntervalData;
 import com.parker.domain.validator.impl.ParkingSpotIdsValidator;
 import com.parker.domain.validator.impl.ParkingSpotValidator;
 import com.parker.facade.parkingspot.ParkingSpotFacade;
@@ -13,6 +14,8 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -70,11 +73,41 @@ public class ParkingSpotController extends AbstractController {
     @ResponseBody
     @RequestMapping(value = "/get-in-radius", method = RequestMethod.GET, produces = "application/json")
     public ResponseContainer getParkingSpotsInRange(@RequestParam("latitude") Float latitude, @RequestParam("longitude") Float longitude,
-                                                    @RequestParam(value = "radius", defaultValue = "1500") Integer radius) {
+                                                    @RequestParam(name = "radius", defaultValue = "1500") Integer radius) {
         ResponseContainer responseContainer = new ResponseContainer();
         List<ParkingSpotData> parkingSpotsInRadius = parkingSpotFacade.findParkingSpotsInRadius(latitude, longitude, radius);
 
         responseContainer.setData(parkingSpotsInRadius);
+
+        return responseContainer;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/get-in-radius", method = RequestMethod.POST, produces = "application/json")
+    public ResponseContainer getFilteredParkingSpotsInRange(@RequestBody FilterData filterData) {
+        ResponseContainer responseContainer = new ResponseContainer();
+        List<ParkingSpotData> parkingSpotsInRadius = parkingSpotFacade.findFilteredParkingSpotsInRadius(filterData);
+
+        responseContainer.setData(parkingSpotsInRadius);
+
+        return responseContainer;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/{parkingSpotId}/get-free-intervals", method = RequestMethod.GET, produces = "application/json")
+    public ResponseContainer getParkingSpotFreeIntervals(@PathVariable("parkingSpotId") String parkingSpotId, @RequestParam("date") String date) {
+        ResponseContainer responseContainer = new ResponseContainer();
+        try {
+            List<ParkingSpotFreeIntervalData> freeIntervals = parkingSpotFacade.getFreeIntervals(parkingSpotId, date);
+            responseContainer.setData(freeIntervals);
+        } catch (ParseException e) {
+            //todo: Log error
+            responseContainer.setSuccessful(false);
+            List<String> errors = new ArrayList<>();
+            errors.add("The date format is not correct");
+            responseContainer.setErrors(errors);
+        }
+
 
         return responseContainer;
     }

@@ -53,4 +53,9 @@ public class ReservationFacadeImpl implements ReservationFacade {
 
         return reservationData;
     }
+
+    @Override
+    public void deleteReservation(String reservationId) {
+        reservationService.delete(Long.parseLong(reservationId));
+    }
 }
