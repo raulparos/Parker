@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Button, ScrollView, Picker, KeyboardAvoidingVie
 import { FormLabel, FormInput, Card } from 'react-native-elements';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
-import Header from '../components/Header';
 import getServerUrl from '../util/ServerUrl';
 
 const mondayFridayDaysSpan = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];

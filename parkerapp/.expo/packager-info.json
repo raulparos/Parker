@@ -1,5 +1,5 @@
 {
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerPort": null
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 11276
 }

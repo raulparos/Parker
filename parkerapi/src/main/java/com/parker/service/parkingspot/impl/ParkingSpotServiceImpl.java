@@ -13,6 +13,7 @@ import com.parker.service.reservation.ReservationService;
 import com.parker.service.user.UserService;
 import com.parker.util.GeolocationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -186,7 +187,11 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
         if (parkingSpot != null) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
-            DayOfWeek day = DayOfWeek.of(calendar.get(Calendar.DAY_OF_WEEK) - 1);
+            int d = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+            if (d == 0) {
+                d = 7;
+            }
+            DayOfWeek day = DayOfWeek.of(d);
 
             List<ParkingSpotActiveIntervalData> activeIntervals = formatActiveDaysIntervals(parkingSpot.getActiveDaysIntervals());
             List<Reservation> reservations = reservationService.getReservationsForDate(parkingSpot.getReservations(), date);

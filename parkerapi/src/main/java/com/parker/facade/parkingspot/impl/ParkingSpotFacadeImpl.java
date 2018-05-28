@@ -81,7 +81,7 @@ public class ParkingSpotFacadeImpl implements ParkingSpotFacade {
 
     @Override
     public List<ParkingSpotFreeIntervalData> getFreeIntervals(String parkingSpotId, String dateString) throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("yyyyy-mm-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date date = format.parse(dateString);
 
         return parkingSpotService.getFreeIntervalsForParkingSpotId(Long.parseLong(parkingSpotId), date);
