@@ -4,6 +4,7 @@ import { FormLabel, FormInput, Card } from 'react-native-elements';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 import getServerUrl from '../util/ServerUrl';
+import styles from '../styles/AddParkingSpotScreenStyle';
 
 const mondayFridayDaysSpan = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
 const weekendDaysSpan = ['saturday', 'sunday'];
@@ -269,34 +270,3 @@ export default class AddParkingSpotScreen extends Component {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: '#fff',
-    },
-    buttonsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingTop: 10,
-        paddingLeft: 15,
-        paddingRight: 15,
-        paddingBottom: 10,
-    },
-    scheduleContainer: {
-
-    },
-    addNewParkingSpotButton: {
-    },
-    cancelAddParkingSpotButton: {
-    },
-    address: {
-        color: '#04BEA6',
-    },
-    addScheduleEntry: {
-        color: '#04BEA6',
-    },
-    scheduleEntry: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    }
-});

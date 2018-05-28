@@ -3,12 +3,22 @@ import { createDrawerNavigator, createStackNavigator } from 'react-navigation'
 
 import MainAppScreen from './src/screens/MainAppScreen';
 import AddParkingSpotScreen from "./src/screens/AddParkingSpotScreen";
+import AddReservationScreen from "./src/screens/AddReservationScreen";
 
-const AddNewParkingSpot = createStackNavigator(
+const AddParkingSpot = createStackNavigator(
     {
         AddNewParkingSpot: {
             screen: AddParkingSpotScreen
-        }
+        },
+
+    }
+);
+
+const AddReservation = createStackNavigator(
+    {
+        AddNewReservation: {
+            screen: AddReservationScreen
+        },
     }
 );
 
@@ -31,7 +41,10 @@ const RootMenu = createStackNavigator(
             screen: MainMenu,
         },
         AddParkingSpot: {
-            screen: AddNewParkingSpot,
+            screen: AddParkingSpot,
+        },
+        AddReservation: {
+            screen: AddReservation,
         },
     },
     {

@@ -33,7 +33,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return userDao.find((String) authentication.getPrincipal());
+//        return userDao.find((String) authentication.getPrincipal());
+        //todo: This is hardcoded for development purposes
+        return userDao.find("raul.paros@gmail.com");
     }
 
     @Override

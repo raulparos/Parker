@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, View, Text, ActivityIndicator } from 'react-native';
+import { ScrollView, View, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {Location, MapView, Permissions} from 'expo';
 import { FormLabel, Divider } from 'react-native-elements';
@@ -9,8 +9,35 @@ import displayMessage from '../util/DisplayMessage';
 import geoCodeLatLng from '../util/Geocoder';
 import getServerUrl from '../util/ServerUrl';
 import styles from '../styles/MainAppScreenStyle';
+import getCurrentDate from '../util/CurrentDate';
 
 export default class MainAppScreen extends Component {
+    constructor(props) {
+        super(props);
+        let currentDate = getCurrentDate();
+
+        this.state = {
+            mapRegion: {
+                latitude: 46.770439,
+                longitude: 23.591423,
+                latitudeDelta: 0.00700,
+                longitudeDelta: 0.00300,
+            },
+            filter: {
+                date: currentDate,
+                startTime: null,
+                endTime: null,
+            },
+            parkingSpotsNo: 0,
+            parkingSpots: [],
+            newParkingSpot: [],
+            geoCodedAddress: "Geocode service could not determine address",
+            markerDetailsId: null,
+            dayFreeIntervals: null,
+        };
+        this.getParkingSpotsInRadiusCall(46.770439, 23.591423);
+    }
+
     static navigationOptions = {
         drawerLabel: 'Parker map',
         drawerIcon: () => {
@@ -24,25 +51,6 @@ export default class MainAppScreen extends Component {
             );
         }
     };
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            mapRegion: {
-                latitude: 46.770439,
-                longitude: 23.591423,
-                latitudeDelta: 0.00700,
-                longitudeDelta: 0.00300,
-            },
-            parkingSpotsNo: 0,
-            parkingSpots: [],
-            newParkingSpot: [],
-            geoCodedAddress: "Geocode service could not determine address",
-            markerDetailsId: null,
-            dayFreeIntervals: null,
-        };
-        this.getParkingSpotsInRadiusCall(46.770439, 23.591423);
-    }
 
     componentDidMount() {
         this.getUserLocation();
@@ -139,6 +147,11 @@ export default class MainAppScreen extends Component {
         return null;
     };
 
+    showAddReservationScreen = (freeInterval) => {
+        console.log("Showing add reservation screen");
+        this.props.navigation.navigate('AddReservation', { freeInterval: freeInterval, parkingSpotId: this.state.markerDetailsId, filter: this.state.filter, addReservationCallback: this.addReservationCallback });
+    };
+
     renderParkingSpotFreeIntervals = () => {
         if (this.state.dayFreeIntervals == null) {
             return(
@@ -159,9 +172,11 @@ export default class MainAppScreen extends Component {
                         {
                             this.state.dayFreeIntervals.map((freeInterval) => {
                                 return (
-                                    <View key={freeInterval.startTime} style={styles.freeIntervals}>
+                                    <TouchableOpacity  key={freeInterval.startTime}
+                                            style={styles.freeIntervals}
+                                            onPress={() => this.showAddReservationScreen(freeInterval)}>
                                         <Text style={styles.freeIntervalsText}>{freeInterval.startTime} - {freeInterval.endTime}</Text>
-                                    </View>
+                                    </TouchableOpacity >
                                 );
                             })
                         }
@@ -183,7 +198,7 @@ export default class MainAppScreen extends Component {
             }
 
             if (this.state.dayFreeIntervals == null) {
-                this.getParkingSpotFreeIntervalsCall(this.state.markerDetailsId, '2018-05-27');
+                this.getParkingSpotFreeIntervalsCall(this.state.markerDetailsId, this.state.filter.date);
             }
             return(
                 <View style={styles.parkingSpotDetailsCard}>
@@ -211,7 +226,7 @@ export default class MainAppScreen extends Component {
                             })
                         }
 
-                        <FormLabel>Today free intervals</FormLabel>
+                        <FormLabel>{this.state.filter.date} free intervals {this.state.filter.startTime === null ? null : 'between ' + this.state.filter.startTime + ' - ' + this.state.filter.intervalEnd}</FormLabel>
                         <Divider style={{backgroundColor: '#cccccc', marginLeft: 20, marginRight: 20}}/>
                         <View>{this.renderParkingSpotFreeIntervals()}</View>
                     </ScrollView>
@@ -259,12 +274,19 @@ export default class MainAppScreen extends Component {
 
     showAddParkingSpotScreen = () => {
         console.log("Showing add parking spot screen");
-        this.props.navigation.navigate('AddNewParkingSpot', { newParkingSpot: this.state.newParkingSpot[0], address: this.state.geoCodedAddress, addParkingSpotCallback: this.addParkingSpotCallback });
+        this.props.navigation.navigate('AddParkingSpot', { newParkingSpot: this.state.newParkingSpot[0], address: this.state.geoCodedAddress, addParkingSpotCallback: this.addParkingSpotCallback });
+    };
+
+    addReservationCallback = () => {
+        console.log("Callback came from add reservation");
+        this.setState({ markerDetailsId: null });
+        displayMessage('Reservation spot added', 'Reservation successfully added!');
     };
 
     addParkingSpotCallback = () => {
         console.log("Callback came back from add parking spot");
         this.cancelAddNewParkingSpot();
+        displayMessage('Parking spot added', 'Parking spot successfully added!');
     };
 
     showMarkerInfo = (event) => {
