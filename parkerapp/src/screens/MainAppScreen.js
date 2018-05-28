@@ -35,7 +35,6 @@ export default class MainAppScreen extends Component {
             markerDetailsId: null,
             dayFreeIntervals: null,
         };
-        this.getParkingSpotsInRadiusCall(46.770439, 23.591423);
     }
 
     static navigationOptions = {
@@ -53,6 +52,7 @@ export default class MainAppScreen extends Component {
     };
 
     componentDidMount() {
+        this.getParkingSpotsInRadiusCall(46.770439, 23.591423);
         this.getUserLocation();
     }
 
@@ -280,7 +280,7 @@ export default class MainAppScreen extends Component {
     addReservationCallback = () => {
         console.log("Callback came from add reservation");
         this.setState({ markerDetailsId: null });
-        displayMessage('Reservation spot added', 'Reservation successfully added!');
+        displayMessage('Reservation created', 'Reservation successfully added!');
     };
 
     addParkingSpotCallback = () => {

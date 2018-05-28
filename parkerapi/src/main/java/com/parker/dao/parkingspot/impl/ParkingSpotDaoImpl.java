@@ -2,6 +2,7 @@ package com.parker.dao.parkingspot.impl;
 
 import com.parker.dao.parkingspot.ParkingSpotDao;
 import com.parker.domain.model.ParkingSpot;
+import com.parker.domain.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,5 +46,12 @@ public class ParkingSpotDaoImpl implements ParkingSpotDao {
     public List<ParkingSpot> findAll() {
         Session session = sessionFactory.getCurrentSession();
         return session.createQuery("FROM ParkingSpot").list();
+    }
+
+    @Override
+    public List<ParkingSpot> findForUser(User user) {
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("FROM ParkingSpot p WHERE p.user IN (:user)").
+                setParameter("user", user).list();
     }
 }

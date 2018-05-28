@@ -5,6 +5,7 @@ import com.parker.dao.parkingspot.ParkingSpotDao;
 import com.parker.data.parkingspot.FilterData;
 import com.parker.data.parkingspot.ParkingSpotActiveIntervalData;
 import com.parker.data.parkingspot.ParkingSpotFreeIntervalData;
+import com.parker.domain.exception.user.UserException;
 import com.parker.domain.model.ParkingSpot;
 import com.parker.domain.model.Reservation;
 import com.parker.domain.model.User;
@@ -210,6 +211,19 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
         List<ParkingSpot> parkingSpots = findParkingSpotsInRadius(filterData.getLatitude(), filterData.getLongitude(), filterData.getRadius());
 
         parkingSpots = filterParkingSpotsByInterval(parkingSpots, filterData);
+
+        return parkingSpots;
+    }
+
+    @Override
+    public List<ParkingSpot> findParkingSpotsForCurrentUser() {
+        List<ParkingSpot> parkingSpots = new ArrayList<>();
+        try {
+            User currentUser = userService.getCurrentUser();
+            parkingSpots = parkingSpotDao.findForUser(currentUser);
+        } catch (UserException e) {
+            //todo: Log error
+        }
 
         return parkingSpots;
     }

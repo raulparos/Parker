@@ -17,4 +17,6 @@ public interface ParkingSpotFacade {
     List<ParkingSpotData> findFilteredParkingSpotsInRadius(FilterData filterData);
 
     List<ParkingSpotFreeIntervalData> getFreeIntervals(String parkingSpotId, String date) throws ParseException;
+
+    List<ParkingSpotData> findParkingSpotsForCurrentUser();
 }

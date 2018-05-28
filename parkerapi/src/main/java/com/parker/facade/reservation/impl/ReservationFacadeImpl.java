@@ -15,6 +15,9 @@ import com.parker.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class ReservationFacadeImpl implements ReservationFacade {
 
@@ -26,6 +29,9 @@ public class ReservationFacadeImpl implements ReservationFacade {
 
     @Autowired
     private Populator<ReservationData, Reservation> reservationPopulator;
+
+    @Autowired
+    private Populator<Reservation, ReservationData> reservationDataPopulator;
 
     @Autowired
     private ParkingSpotService parkingSpotService;
@@ -57,5 +63,23 @@ public class ReservationFacadeImpl implements ReservationFacade {
     @Override
     public void deleteReservation(String reservationId) {
         reservationService.delete(Long.parseLong(reservationId));
+    }
+
+    @Override
+    public List<ReservationData> findReservationsForUser() {
+        List<Reservation> reservations = reservationService.findReservationsForUser();
+
+        return convertAllReservations(reservations);
+    }
+
+    private List<ReservationData> convertAllReservations(List<Reservation> reservations) {
+        List<ReservationData> reservationsData = new ArrayList<>();
+        for (Reservation reservation : reservations) {
+            ReservationData reservationData = new ReservationData();
+            reservationDataPopulator.populate(reservation, reservationData);
+            reservationsData.add(reservationData);
+        }
+
+        return reservationsData;
     }
 }

@@ -83,6 +83,17 @@ public class ParkingSpotController extends AbstractController {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/get-for-user", method = RequestMethod.GET, produces = "application/json")
+    public ResponseContainer getParkingSpotsForUser() {
+        ResponseContainer responseContainer = new ResponseContainer();
+
+        List<ParkingSpotData> parkingSpotsForUser = parkingSpotFacade.findParkingSpotsForCurrentUser();
+        responseContainer.setData(parkingSpotsForUser);
+
+        return responseContainer;
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/get-in-radius", method = RequestMethod.POST, produces = "application/json")
     public ResponseContainer getFilteredParkingSpotsInRange(@RequestBody FilterData filterData) {
         ResponseContainer responseContainer = new ResponseContainer();

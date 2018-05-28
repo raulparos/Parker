@@ -33,6 +33,9 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<ParkingSpot> parkingSpots;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Reservation> reservations;
+
     public UserRole getUserRole() {
         return userRole;
     }
@@ -95,5 +98,13 @@ public class User {
 
     public void setParkingSpots(List<ParkingSpot> parkingSpots) {
         this.parkingSpots = parkingSpots;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 }

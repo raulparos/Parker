@@ -4,6 +4,8 @@ import { createDrawerNavigator, createStackNavigator } from 'react-navigation'
 import MainAppScreen from './src/screens/MainAppScreen';
 import AddParkingSpotScreen from "./src/screens/AddParkingSpotScreen";
 import AddReservationScreen from "./src/screens/AddReservationScreen";
+import MyParkingSpotsScreen from "./src/screens/MyParkingSpotsScreen";
+import MyReservationsScreen from "./src/screens/MyReservationsScreen";
 
 const AddParkingSpot = createStackNavigator(
     {
@@ -27,6 +29,14 @@ const MainMenu = createDrawerNavigator(
         MainApp: {
             path: '/',
             screen: MainAppScreen,
+        },
+        MyParkingSpots: {
+            path: '/MyParkingSpots',
+            screen: MyParkingSpotsScreen,
+        },
+        MyReservations: {
+            path: '/MyReservations',
+            screen: MyReservationsScreen,
         },
     },
     {

@@ -1,5 +1,6 @@
 package com.parker.service.reservation;
 
+import com.parker.data.reservation.ReservationData;
 import com.parker.domain.exception.reservation.ReservationException;
 import com.parker.domain.model.ParkingSpot;
 import com.parker.domain.model.Reservation;
@@ -17,4 +18,6 @@ public interface ReservationService {
     List<Reservation> sortReservationsByStartTime(List<Reservation> listToSort);
 
     boolean validateReservationInterval(Reservation reservation, ParkingSpot parkingSpot);
+
+    List<Reservation> findReservationsForUser();
 }

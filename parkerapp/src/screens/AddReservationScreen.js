@@ -16,7 +16,7 @@ export default class AddReservationScreen extends Component {
     }
 
     static navigationOptions = {
-        title: 'Add new reservation',
+        title: 'Make reservation',
         headerStyle: {
             backgroundColor: '#04BEA6',
         },
@@ -119,7 +119,7 @@ export default class AddReservationScreen extends Component {
                     <Button
                         style={styles.addNewParkingSpotButton}
                         color='#04BEA6'
-                        title='ADD PARKING SPOT'
+                        title='MAKE RESERVATION'
                         onPress={() => this.addNewReservation()}
                     />
                 </View>

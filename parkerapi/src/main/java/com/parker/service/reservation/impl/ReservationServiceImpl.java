@@ -3,10 +3,13 @@ package com.parker.service.reservation.impl;
 import com.parker.dao.reservation.ReservationDao;
 import com.parker.data.parkingspot.ParkingSpotFreeIntervalData;
 import com.parker.domain.exception.reservation.ReservationException;
+import com.parker.domain.exception.user.UserException;
 import com.parker.domain.model.ParkingSpot;
 import com.parker.domain.model.Reservation;
+import com.parker.domain.model.User;
 import com.parker.service.parkingspot.ParkingSpotService;
 import com.parker.service.reservation.ReservationService;
+import com.parker.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +19,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@Transactional
 @Service
+@Transactional
 public class ReservationServiceImpl implements ReservationService {
 
     @Autowired
@@ -26,11 +29,14 @@ public class ReservationServiceImpl implements ReservationService {
     @Autowired
     private ParkingSpotService parkingSpotService;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public Long save(Reservation reservation) throws ReservationException {
         if (validateReservationInterval(reservation, reservation.getParkingSpot())) {
             parkingSpotService.addReservation(reservation.getParkingSpot(), reservation);
-
+            userService.addReservationToCurrentUser(reservation);
             return reservationDao.save(reservation);
         }
         else {
@@ -98,5 +104,18 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         return false;
+    }
+
+    @Override
+    public List<Reservation> findReservationsForUser() {
+        List<Reservation> reservations = new ArrayList<>();
+        try {
+            User currentUser = userService.getCurrentUser();
+            reservations = reservationDao.findForUser(currentUser);
+        } catch (UserException e) {
+            //todo: Log error
+        }
+
+        return reservations;
     }
 }

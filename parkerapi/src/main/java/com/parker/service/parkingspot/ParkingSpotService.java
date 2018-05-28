@@ -32,4 +32,6 @@ public interface ParkingSpotService {
     List<ParkingSpotFreeIntervalData> getFreeIntervalsForParkingSpotId(Long parkingSpotId, Date date);
 
     List<ParkingSpot> findFilteredParkingSpotsInRadius(FilterData filterData);
+
+    List<ParkingSpot> findParkingSpotsForCurrentUser();
 }

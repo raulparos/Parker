@@ -47,6 +47,16 @@ public class ReservationController extends AbstractController {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/get-for-user", method = RequestMethod.GET, produces = "application/json")
+    public ResponseContainer getReservationsForUser() {
+        ResponseContainer responseContainer = new ResponseContainer();
+
+        responseContainer.setData(reservationFacade.findReservationsForUser());
+
+        return responseContainer;
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/{reservationId}/delete", method = RequestMethod.DELETE, produces = "application/json")
     public ResponseContainer deleteReservation(@PathVariable("reservationId") String reservationId) {
         ResponseContainer responseContainer = new ResponseContainer();

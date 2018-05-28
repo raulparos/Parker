@@ -4,6 +4,7 @@ import com.parker.dao.user.UserDao;
 import com.parker.domain.exception.user.UserException;
 import com.parker.domain.exception.user.UserNotFoundException;
 import com.parker.domain.model.ParkingSpot;
+import com.parker.domain.model.Reservation;
 import com.parker.domain.model.User;
 import com.parker.service.user.UserService;
 import com.parker.util.authentication.UserUtils;
@@ -55,6 +56,16 @@ public class UserServiceImpl implements UserService {
             List<ParkingSpot> parkingSpots = currentUser.getParkingSpots();
             parkingSpots.add(parkingSpot);
             currentUser.setParkingSpots(parkingSpots);
+        }
+    }
+
+    @Override
+    public void addReservationToCurrentUser(Reservation reservation) {
+        User currentUser = getCurrentUser();
+        if (currentUser != null) {
+            List<Reservation> reservations = currentUser.getReservations();
+            reservations.add(reservation);
+            currentUser.setReservations(reservations);
         }
     }
 }

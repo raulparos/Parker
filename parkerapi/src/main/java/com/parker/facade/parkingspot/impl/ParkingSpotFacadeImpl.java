@@ -87,6 +87,13 @@ public class ParkingSpotFacadeImpl implements ParkingSpotFacade {
         return parkingSpotService.getFreeIntervalsForParkingSpotId(Long.parseLong(parkingSpotId), date);
     }
 
+    @Override
+    public List<ParkingSpotData> findParkingSpotsForCurrentUser() {
+        List<ParkingSpot> parkingSpots = parkingSpotService.findParkingSpotsForCurrentUser();
+
+        return convertAllParkingSpots(parkingSpots);
+    }
+
     private List<ParkingSpotData> convertAllParkingSpots(List<ParkingSpot> parkingSpots) {
         List<ParkingSpotData> parkingSpotsData = new ArrayList<>();
         for (ParkingSpot parkingSpot : parkingSpots) {
