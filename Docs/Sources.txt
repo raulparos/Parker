@@ -1,0 +1,5 @@
+﻿[ 1 ] - http://inrix.com/press-releases/parking-pain-us/
+[ 2 ] - L. Alboaie, S. Buraga: "Servicii Web. Concepte de bază și implementări" (2006) ( https://www.slideshare.net/busaco/l-alboaie-s-buraga-servicii-web-concepte-de-baz-i-implementri-2006 )
+[ 3 ] - "What is the difference between the Web and the Internet?". W3C Help and FAQ. W3C. 2009. Archived from the original on 9 July 2015. Retrieved 16 July 2015.
+[ 4 ] - "Web Growth Summary". MIT.edu. Retrieved 2012-07-10. https://stuff.mit.edu/people/mkgray/net/web-growth-summary.html
+[ 5 ] - https://www.statista.com/statistics/330695/number-of-smartphone-users-worldwide/
