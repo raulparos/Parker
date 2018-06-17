@@ -6,3 +6,4 @@
 [ 6 ] - https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm
 [ 7 ] - Craig Walls: "Spring in Action" (2005)
 [ 8 ] - Christian Bauer, Gavin King: "Java Persistence with Hibernate" (2006)
+[ 9 ] - https://redux.js.org
