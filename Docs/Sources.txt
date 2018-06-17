@@ -4,3 +4,5 @@
 [ 4 ] - "Web Growth Summary". MIT.edu. Retrieved 2012-07-10. https://stuff.mit.edu/people/mkgray/net/web-growth-summary.html
 [ 5 ] - https://www.statista.com/statistics/330695/number-of-smartphone-users-worldwide/
 [ 6 ] - https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm
+[ 7 ] - Craig Walls: "Spring in Action" (2005)
+[ 8 ] - Christian Bauer, Gavin King: "Java Persistence with Hibernate" (2006)
