@@ -7,3 +7,6 @@
 [ 7 ] - Craig Walls: "Spring in Action" (2005)
 [ 8 ] - Christian Bauer, Gavin King: "Java Persistence with Hibernate" (2006)
 [ 9 ] - https://redux.js.org
+
+Architectural Styles and
+the Design of Network-based Software Architectures
