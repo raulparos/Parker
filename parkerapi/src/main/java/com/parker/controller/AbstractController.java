@@ -8,7 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
 @Component
-public class AbstractController {
+public abstract class AbstractController {
     @Autowired
     protected ValidatorUtils validatorUtils;
 
