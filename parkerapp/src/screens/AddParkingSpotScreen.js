@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button, ScrollView, Picker, KeyboardAvoidingView } from 'react-native';
-import { FormLabel, FormInput, Card } from 'react-native-elements';
+import { Text, View, Button, ScrollView, Picker } from 'react-native';
+import { FormLabel, Card } from 'react-native-elements';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import DatePicker from 'react-native-datepicker';
 
 import getServerUrl from '../util/ServerUrl';
 import styles from '../styles/AddParkingSpotScreenStyle';
@@ -231,11 +232,45 @@ export default class AddParkingSpotScreen extends Component {
                         <Picker.Item label="Saturday" value="saturday" />
                         <Picker.Item label="Sunday" value="sunday" />
                     </Picker>
-                    <FormInput onChangeText={(val) => this.setState({fromTime: val})}
-                               placeholder="From (hh:mm):"
+                    <DatePicker
+                        style={{width: 200, marginLeft: 20, marginTop: 10}}
+                        date={this.state.fromTime}
+                        mode="time"
+                        placeholder="Select start time"
+                        confirmBtnText="Confirm"
+                        cancelBtnText="Cancel"
+                        customStyles={{
+                            dateIcon: {
+                                position: 'absolute',
+                                left: 0,
+                                top: 4,
+                                marginLeft: 0
+                            },
+                            dateInput: {
+                                marginLeft: 36
+                            }
+                        }}
+                        onDateChange={(date) => {this.setState({fromTime: date})}}
                     />
-                    <FormInput onChangeText={(val) => this.setState({toTime: val})}
-                               placeholder="To (hh:mm):"
+                    <DatePicker
+                        style={{width: 200, marginLeft: 20, marginTop: 10}}
+                        date={this.state.toTime}
+                        mode="time"
+                        placeholder="Select end time"
+                        confirmBtnText="Confirm"
+                        cancelBtnText="Cancel"
+                        customStyles={{
+                            dateIcon: {
+                                position: 'absolute',
+                                left: 0,
+                                top: 4,
+                                marginLeft: 0
+                            },
+                            dateInput: {
+                                marginLeft: 36
+                            }
+                        }}
+                        onDateChange={(date) => {this.setState({toTime: date})}}
                     />
                     <MaterialIcon
                         name="add-box"

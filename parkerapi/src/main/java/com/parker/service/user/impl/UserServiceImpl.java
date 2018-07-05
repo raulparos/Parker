@@ -27,7 +27,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Locale getCurrentLocale() {
-        //todo: Implement this correctly when localization comes into play. This is just a mock-up
         return Locale.ENGLISH;
     }
 
@@ -35,7 +34,6 @@ public class UserServiceImpl implements UserService {
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        return userDao.find((String) authentication.getPrincipal());
-        //todo: This is hardcoded for development purposes
         return userDao.find("raul.paros@gmail.com");
     }
 

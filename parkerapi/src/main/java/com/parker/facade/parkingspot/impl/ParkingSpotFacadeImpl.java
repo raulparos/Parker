@@ -43,7 +43,6 @@ public class ParkingSpotFacadeImpl implements ParkingSpotFacade {
             Long id = parkingSpotService.save(parkingSpotFromData, currentUser);
             parkingSpotData.setId(id);
         } catch (UserException e) {
-            //todo: Log error
             parkingSpotData = null;
         }
 
